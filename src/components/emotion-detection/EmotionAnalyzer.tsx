@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -17,11 +17,21 @@ interface EmotionScores {
   dominant_emotion: string;
 }
 
-const EmotionAnalyzer = () => {
+interface EmotionAnalyzerProps {
+  selectedText?: string;
+}
+
+const EmotionAnalyzer = ({ selectedText }: EmotionAnalyzerProps) => {
   const [text, setText] = useState('');
   const [emotions, setEmotions] = useState<EmotionScores | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (selectedText) {
+      setText(selectedText);
+    }
+  }, [selectedText]);
 
   const handleAnalyze = async () => {
     if (!text.trim()) {
