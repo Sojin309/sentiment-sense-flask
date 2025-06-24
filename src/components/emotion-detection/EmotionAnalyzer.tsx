@@ -17,13 +17,32 @@ interface EmotionScores {
   dominant_emotion: string;
 }
 
+interface ExpandedEmotionScores {
+  calm: number;
+  happy: number;
+  sad: number;
+  angry: number;
+  anxious: number;
+  excited: number;
+  surprised: number;
+  disgusted: number;
+  neutral: number;
+  dominant_emotion: string;
+  explanation: string;
+}
+
+interface EmotionAnalysisResult {
+  original_emotions: EmotionScores;
+  expanded_emotions: ExpandedEmotionScores;
+}
+
 interface EmotionAnalyzerProps {
   selectedText?: string;
 }
 
 const EmotionAnalyzer = ({ selectedText }: EmotionAnalyzerProps) => {
   const [text, setText] = useState('');
-  const [emotions, setEmotions] = useState<EmotionScores | null>(null);
+  const [emotions, setEmotions] = useState<EmotionAnalysisResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -58,6 +77,30 @@ const EmotionAnalyzer = ({ selectedText }: EmotionAnalyzerProps) => {
       setLoading(false);
     }
   };
+
+  const getEmotionColor = (emotion: string) => {
+    const colors = {
+      // Original emotions
+      anger: 'bg-red-100 text-red-800 border-red-200',
+      disgust: 'bg-green-100 text-green-800 border-green-200',
+      fear: 'bg-purple-100 text-purple-800 border-purple-200',
+      joy: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+      sadness: 'bg-blue-100 text-blue-800 border-blue-200',
+      // Expanded emotions
+      calm: 'bg-teal-100 text-teal-800 border-teal-200',
+      happy: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+      sad: 'bg-blue-100 text-blue-800 border-blue-200',
+      angry: 'bg-red-100 text-red-800 border-red-200',
+      anxious: 'bg-orange-100 text-orange-800 border-orange-200',
+      excited: 'bg-pink-100 text-pink-800 border-pink-200',
+      surprised: 'bg-cyan-100 text-cyan-800 border-cyan-200',
+      disgusted: 'bg-green-100 text-green-800 border-green-200',
+      neutral: 'bg-gray-100 text-gray-800 border-gray-200',
+    };
+    return colors[emotion as keyof typeof colors] || 'bg-gray-100 text-gray-800';
+  };
+
+  const formatScore = (score: number) => (score * 100).toFixed(1);
 
   return (
     <Card className="shadow-lg border-0 bg-white/70 backdrop-blur-sm">
@@ -113,17 +156,69 @@ const EmotionAnalyzer = ({ selectedText }: EmotionAnalyzerProps) => {
         )}
 
         {emotions && (
-          <div className="space-y-4">
-            <div className="text-center p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg">
-              <h3 className="text-lg font-semibold mb-2">Dominant Emotion</h3>
-              <Badge className="text-lg px-4 py-2">
-                {emotions.dominant_emotion.charAt(0).toUpperCase() + emotions.dominant_emotion.slice(1)}
-              </Badge>
+          <div className="space-y-6">
+            {/* Expanded Emotions - Main Display */}
+            <div className="space-y-4">
+              <div className="text-center p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg">
+                <h3 className="text-lg font-semibold mb-2">Primary Emotion Detected</h3>
+                <Badge className="text-lg px-4 py-2">
+                  {emotions.expanded_emotions.dominant_emotion.charAt(0).toUpperCase() + 
+                   emotions.expanded_emotions.dominant_emotion.slice(1)}
+                </Badge>
+              </div>
+
+              {/* Explanation */}
+              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                <h4 className="font-semibold text-blue-800 mb-2">Analysis Explanation:</h4>
+                <p className="text-blue-700">{emotions.expanded_emotions.explanation}</p>
+              </div>
+
+              {/* Expanded Emotion Scores */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Detailed Emotion Analysis</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {Object.entries(emotions.expanded_emotions).map(([emotion, score]) => {
+                    if (emotion === 'dominant_emotion' || emotion === 'explanation') return null;
+                    return (
+                      <div key={emotion} className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="font-medium text-gray-700 capitalize">
+                            {emotion}
+                          </span>
+                          <Badge variant="outline" className={getEmotionColor(emotion)}>
+                            {formatScore(score as number)}%
+                          </Badge>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div 
+                            className={`h-2 rounded-full transition-all duration-500 ${
+                              emotion === 'angry' || emotion === 'anger' ? 'bg-red-500' :
+                              emotion === 'disgusted' || emotion === 'disgust' ? 'bg-green-500' :
+                              emotion === 'anxious' || emotion === 'fear' ? 'bg-purple-500' :
+                              emotion === 'happy' || emotion === 'joy' ? 'bg-yellow-500' :
+                              emotion === 'sad' || emotion === 'sadness' ? 'bg-blue-500' :
+                              emotion === 'excited' ? 'bg-pink-500' :
+                              emotion === 'surprised' ? 'bg-cyan-500' :
+                              emotion === 'calm' ? 'bg-teal-500' :
+                              'bg-gray-500'
+                            }`}
+                            style={{ width: `${(score as number) * 100}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
 
-            <pre className="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto text-sm">
-              {JSON.stringify(emotions, null, 2)}
-            </pre>
+            {/* JSON Output */}
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">Raw Analysis Data (JSON)</h3>
+              <pre className="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto text-sm">
+                {JSON.stringify(emotions, null, 2)}
+              </pre>
+            </div>
           </div>
         )}
       </CardContent>
