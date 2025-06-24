@@ -19,7 +19,7 @@ const ServerSimulator = () => {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          <span>Flask Server Deployment (Task 6)</span>
+          <span>Flask Server Deployment</span>
           <Button onClick={handleSimulateServer} className="flex items-center space-x-2">
             <Server className="h-4 w-4" />
             <span>Simulate Server</span>
@@ -57,7 +57,7 @@ const ServerSimulator = () => {
             </div>
             
             <div>
-              <h4 className="font-semibold mb-2">Error Handling (Task 7):</h4>
+              <h4 className="font-semibold mb-2">Error Handling:</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 {Object.entries(serverStatus.errorHandling).map(([code, description]) => (
                   <div key={code} className="flex items-center space-x-2 text-sm">

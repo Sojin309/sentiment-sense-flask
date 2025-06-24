@@ -18,7 +18,7 @@ const CodeAnalyzer = () => {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          <span>Static Code Analysis (Task 8)</span>
+          <span>Static Code Analysis</span>
           <Button onClick={handleCodeAnalysis} className="flex items-center space-x-2">
             <Code className="h-4 w-4" />
             <span>Analyze Code</span>

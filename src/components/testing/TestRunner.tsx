@@ -31,7 +31,7 @@ const TestRunner = () => {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          <span>Unit Tests (Task 5)</span>
+          <span>Unit Tests</span>
           <Button 
             onClick={handleRunTests} 
             disabled={isRunningTests}

@@ -18,7 +18,7 @@ const PackageVerifier = () => {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          <span>Package Structure (Task 4)</span>
+          <span>Package Structure</span>
           <Button onClick={handleVerifyPackage} className="flex items-center space-x-2">
             <Package className="h-4 w-4" />
             <span>Verify Structure</span>
