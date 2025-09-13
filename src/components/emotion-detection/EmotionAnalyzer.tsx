@@ -18,6 +18,7 @@ interface EmotionScores {
 }
 
 interface ExpandedEmotionScores {
+  // Core emotions
   calm: number;
   happy: number;
   sad: number;
@@ -27,6 +28,35 @@ interface ExpandedEmotionScores {
   surprised: number;
   disgusted: number;
   neutral: number;
+  
+  // Extended emotions
+  confident: number;
+  frustrated: number;
+  hopeful: number;
+  disappointed: number;
+  grateful: number;
+  envious: number;
+  proud: number;
+  ashamed: number;
+  curious: number;
+  bored: number;
+  content: number;
+  irritated: number;
+  enthusiastic: number;
+  melancholic: number;
+  optimistic: number;
+  pessimistic: number;
+  relieved: number;
+  stressed: number;
+  compassionate: number;
+  hostile: number;
+  lonely: number;
+  overwhelmed: number;
+  peaceful: number;
+  passionate: number;
+  determined: number;
+  uncertain: number;
+  
   dominant_emotion: string;
   explanation: string;
 }
@@ -86,7 +116,8 @@ const EmotionAnalyzer = ({ selectedText }: EmotionAnalyzerProps) => {
       fear: 'bg-purple-100 text-purple-800 border-purple-200',
       joy: 'bg-yellow-100 text-yellow-800 border-yellow-200',
       sadness: 'bg-blue-100 text-blue-800 border-blue-200',
-      // Expanded emotions
+      
+      // Core expanded emotions
       calm: 'bg-teal-100 text-teal-800 border-teal-200',
       happy: 'bg-yellow-100 text-yellow-800 border-yellow-200',
       sad: 'bg-blue-100 text-blue-800 border-blue-200',
@@ -96,8 +127,36 @@ const EmotionAnalyzer = ({ selectedText }: EmotionAnalyzerProps) => {
       surprised: 'bg-cyan-100 text-cyan-800 border-cyan-200',
       disgusted: 'bg-green-100 text-green-800 border-green-200',
       neutral: 'bg-gray-100 text-gray-800 border-gray-200',
+      
+      // Extended emotions
+      confident: 'bg-indigo-100 text-indigo-800 border-indigo-200',
+      frustrated: 'bg-red-100 text-red-800 border-red-200',
+      hopeful: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+      disappointed: 'bg-slate-100 text-slate-800 border-slate-200',
+      grateful: 'bg-amber-100 text-amber-800 border-amber-200',
+      envious: 'bg-lime-100 text-lime-800 border-lime-200',
+      proud: 'bg-violet-100 text-violet-800 border-violet-200',
+      ashamed: 'bg-rose-100 text-rose-800 border-rose-200',
+      curious: 'bg-sky-100 text-sky-800 border-sky-200',
+      bored: 'bg-neutral-100 text-neutral-800 border-neutral-200',
+      content: 'bg-green-100 text-green-800 border-green-200',
+      irritated: 'bg-red-100 text-red-800 border-red-200',
+      enthusiastic: 'bg-fuchsia-100 text-fuchsia-800 border-fuchsia-200',
+      melancholic: 'bg-blue-100 text-blue-800 border-blue-200',
+      optimistic: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+      pessimistic: 'bg-gray-100 text-gray-800 border-gray-200',
+      relieved: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+      stressed: 'bg-orange-100 text-orange-800 border-orange-200',
+      compassionate: 'bg-pink-100 text-pink-800 border-pink-200',
+      hostile: 'bg-red-100 text-red-800 border-red-200',
+      lonely: 'bg-blue-100 text-blue-800 border-blue-200',
+      overwhelmed: 'bg-purple-100 text-purple-800 border-purple-200',
+      peaceful: 'bg-teal-100 text-teal-800 border-teal-200',
+      passionate: 'bg-rose-100 text-rose-800 border-rose-200',
+      determined: 'bg-indigo-100 text-indigo-800 border-indigo-200',
+      uncertain: 'bg-gray-100 text-gray-800 border-gray-200',
     };
-    return colors[emotion as keyof typeof colors] || 'bg-gray-100 text-gray-800';
+    return colors[emotion as keyof typeof colors] || 'bg-gray-100 text-gray-800 border-gray-200';
   };
 
   const formatScore = (score: number) => (score * 100).toFixed(1);
@@ -175,8 +234,8 @@ const EmotionAnalyzer = ({ selectedText }: EmotionAnalyzerProps) => {
 
               {/* Expanded Emotion Scores */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">Detailed Emotion Analysis</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Detailed Emotion Analysis ({Object.keys(emotions.expanded_emotions).length - 2} emotions detected)</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-3">
                   {Object.entries(emotions.expanded_emotions).map(([emotion, score]) => {
                     if (emotion === 'dominant_emotion' || emotion === 'explanation') return null;
                     return (
@@ -192,14 +251,18 @@ const EmotionAnalyzer = ({ selectedText }: EmotionAnalyzerProps) => {
                         <div className="w-full bg-gray-200 rounded-full h-2">
                           <div 
                             className={`h-2 rounded-full transition-all duration-500 ${
-                              emotion === 'angry' || emotion === 'anger' ? 'bg-red-500' :
+                              emotion === 'angry' || emotion === 'anger' || emotion === 'frustrated' || emotion === 'irritated' || emotion === 'hostile' ? 'bg-red-500' :
                               emotion === 'disgusted' || emotion === 'disgust' ? 'bg-green-500' :
-                              emotion === 'anxious' || emotion === 'fear' ? 'bg-purple-500' :
-                              emotion === 'happy' || emotion === 'joy' ? 'bg-yellow-500' :
-                              emotion === 'sad' || emotion === 'sadness' ? 'bg-blue-500' :
-                              emotion === 'excited' ? 'bg-pink-500' :
-                              emotion === 'surprised' ? 'bg-cyan-500' :
-                              emotion === 'calm' ? 'bg-teal-500' :
+                              emotion === 'anxious' || emotion === 'fear' || emotion === 'stressed' || emotion === 'overwhelmed' ? 'bg-purple-500' :
+                              emotion === 'happy' || emotion === 'joy' || emotion === 'excited' || emotion === 'enthusiastic' || emotion === 'optimistic' ? 'bg-yellow-500' :
+                              emotion === 'sad' || emotion === 'sadness' || emotion === 'melancholic' || emotion === 'lonely' || emotion === 'disappointed' ? 'bg-blue-500' :
+                              emotion === 'surprised' || emotion === 'curious' ? 'bg-cyan-500' :
+                              emotion === 'calm' || emotion === 'peaceful' || emotion === 'content' ? 'bg-teal-500' :
+                              emotion === 'confident' || emotion === 'proud' || emotion === 'determined' ? 'bg-indigo-500' :
+                              emotion === 'hopeful' || emotion === 'grateful' || emotion === 'relieved' ? 'bg-emerald-500' :
+                              emotion === 'passionate' || emotion === 'compassionate' ? 'bg-pink-500' :
+                              emotion === 'ashamed' || emotion === 'envious' ? 'bg-rose-500' :
+                              emotion === 'bored' || emotion === 'neutral' || emotion === 'uncertain' || emotion === 'pessimistic' ? 'bg-gray-500' :
                               'bg-gray-500'
                             }`}
                             style={{ width: `${(score as number) * 100}%` }}
