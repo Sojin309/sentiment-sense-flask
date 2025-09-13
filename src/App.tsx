@@ -1,9 +1,8 @@
 
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Brain, TestTube } from 'lucide-react';
+import { Brain } from 'lucide-react';
 import EmotionDetection from '@/pages/EmotionDetection';
-import Testing from '@/pages/Testing';
 import './App.css';
 
 function App() {
@@ -23,19 +22,12 @@ function App() {
                   <span>Emotion Detection</span>
                 </Button>
               </Link>
-              <Link to="/testing">
-                <Button variant="ghost" className="flex items-center space-x-2">
-                  <TestTube className="h-4 w-4" />
-                  <span>Testing Dashboard</span>
-                </Button>
-              </Link>
             </div>
           </div>
         </nav>
 
         <Routes>
           <Route path="/" element={<EmotionDetection />} />
-          <Route path="/testing" element={<Testing />} />
         </Routes>
       </div>
     </Router>
