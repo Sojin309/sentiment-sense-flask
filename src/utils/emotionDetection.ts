@@ -23,7 +23,7 @@ export interface ExpandedEmotionResponse {
   disgusted: number;
   neutral: number;
   
-  // Extended emotions
+  // Extended psychological emotions
   confident: number;
   frustrated: number;
   hopeful: number;
@@ -50,6 +50,39 @@ export interface ExpandedEmotionResponse {
   passionate: number;
   determined: number;
   uncertain: number;
+  
+  // Physical & Basic Human Emotions
+  hungry: number;
+  thirsty: number;
+  tired: number;
+  sleepy: number;
+  energetic: number;
+  sick: number;
+  pain: number;
+  comfortable: number;
+  restless: number;
+  satisfied: number;
+  craving: number;
+  
+  // Social & Relationship Emotions  
+  loved: number;
+  rejected: number;
+  betrayed: number;
+  trusting: number;
+  suspicious: number;
+  included: number;
+  excluded: number;
+  supported: number;
+  
+  // Achievement & Motivation Emotions
+  motivated: number;
+  lazy: number;
+  productive: number;
+  procrastinating: number;
+  accomplished: number;
+  defeated: number;
+  focused: number;
+  distracted: number;
   
   dominant_emotion: string;
   explanation: string;
@@ -83,6 +116,7 @@ export const emotionDetector = async (textToAnalyze: string): Promise<EmotionAna
         dominant_emotion: 'none'
       },
       expandedEmotions: {
+        // Core emotions
         calm: 0,
         happy: 0,
         sad: 0,
@@ -92,6 +126,8 @@ export const emotionDetector = async (textToAnalyze: string): Promise<EmotionAna
         surprised: 0,
         disgusted: 0,
         neutral: 0,
+        
+        // Extended psychological emotions
         confident: 0,
         frustrated: 0,
         hopeful: 0,
@@ -118,6 +154,39 @@ export const emotionDetector = async (textToAnalyze: string): Promise<EmotionAna
         passionate: 0,
         determined: 0,
         uncertain: 0,
+        
+        // Physical & Basic Human Emotions
+        hungry: 0,
+        thirsty: 0,
+        tired: 0,
+        sleepy: 0,
+        energetic: 0,
+        sick: 0,
+        pain: 0,
+        comfortable: 0,
+        restless: 0,
+        satisfied: 0,
+        craving: 0,
+        
+        // Social & Relationship Emotions
+        loved: 0,
+        rejected: 0,
+        betrayed: 0,
+        trusting: 0,
+        suspicious: 0,
+        included: 0,
+        excluded: 0,
+        supported: 0,
+        
+        // Achievement & Motivation Emotions
+        motivated: 0,
+        lazy: 0,
+        productive: 0,
+        procrastinating: 0,
+        accomplished: 0,
+        defeated: 0,
+        focused: 0,
+        distracted: 0,
         dominant_emotion: 'neutral',
         explanation: 'No text provided for analysis'
       },
@@ -143,7 +212,7 @@ export const emotionDetector = async (textToAnalyze: string): Promise<EmotionAna
     let disgusted = 0.1;
     let neutral = 0.5; // Default higher for neutral
     
-    // Extended emotions
+    // Extended psychological emotions
     let confident = 0.1;
     let frustrated = 0.1;
     let hopeful = 0.1;
@@ -170,6 +239,39 @@ export const emotionDetector = async (textToAnalyze: string): Promise<EmotionAna
     let passionate = 0.1;
     let determined = 0.1;
     let uncertain = 0.1;
+    
+    // Physical & Basic Human Emotions
+    let hungry = 0.1;
+    let thirsty = 0.1;
+    let tired = 0.1;
+    let sleepy = 0.1;
+    let energetic = 0.1;
+    let sick = 0.1;
+    let pain = 0.1;
+    let comfortable = 0.1;
+    let restless = 0.1;
+    let satisfied = 0.1;
+    let craving = 0.1;
+    
+    // Social & Relationship Emotions
+    let loved = 0.1;
+    let rejected = 0.1;
+    let betrayed = 0.1;
+    let trusting = 0.1;
+    let suspicious = 0.1;
+    let included = 0.1;
+    let excluded = 0.1;
+    let supported = 0.1;
+    
+    // Achievement & Motivation Emotions
+    let motivated = 0.1;
+    let lazy = 0.1;
+    let productive = 0.1;
+    let procrastinating = 0.1;
+    let accomplished = 0.1;
+    let defeated = 0.1;
+    let focused = 0.1;
+    let distracted = 0.1;
 
     // Original emotion scores for backward compatibility
     let anger = 0.1;
@@ -386,23 +488,240 @@ export const emotionDetector = async (textToAnalyze: string): Promise<EmotionAna
     if (textLower.includes('determined') || textLower.includes('focused') || textLower.includes('will do') ||
         textLower.includes('committed') || textLower.includes('dedicated') || textLower.includes('persevere')) {
       determined += Math.random() * 0.8 + 0.1;
+      focused += Math.random() * 0.7 + 0.2;
       explanation += "Language showing determination and resolve. ";
     }
 
     // Uncertain emotions
     if (textLower.includes('uncertain') || textLower.includes('unsure') || textLower.includes('maybe') ||
-        textLower.includes('don\'t know') || textLower.includes('confused') || textLower.includes('unclear')) {
+        textLower.includes("don't know") || textLower.includes('confused') || textLower.includes('unclear')) {
       uncertain += Math.random() * 0.6 + 0.2;
       explanation += "Language expressing uncertainty and confusion. ";
+    }
+
+    // PHYSICAL & BASIC HUMAN EMOTIONS
+
+    // Hungry/Starvation emotions
+    if (textLower.includes('hungry') || textLower.includes('starving') || textLower.includes('famished') ||
+        textLower.includes('craving food') || textLower.includes('need to eat') || textLower.includes('empty stomach') ||
+        textLower.includes('food') || textLower.includes('starved') || textLower.includes('appetite')) {
+      hungry += Math.random() * 0.8 + 0.1;
+      craving += Math.random() * 0.6 + 0.2;
+      explanation += "Language indicating hunger and food cravings. ";
+    }
+
+    // Thirsty emotions
+    if (textLower.includes('thirsty') || textLower.includes('dehydrated') || textLower.includes('need water') ||
+        textLower.includes('dry mouth') || textLower.includes('parched') || textLower.includes('drink')) {
+      thirsty += Math.random() * 0.8 + 0.1;
+      explanation += "Language expressing thirst and need for hydration. ";
+    }
+
+    // Tired/Exhausted emotions
+    if (textLower.includes('tired') || textLower.includes('exhausted') || textLower.includes('drained') ||
+        textLower.includes('worn out') || textLower.includes('fatigued') || textLower.includes('weary') ||
+        textLower.includes('beat') || textLower.includes('spent')) {
+      tired += Math.random() * 0.8 + 0.1;
+      explanation += "Language indicating physical or mental tiredness. ";
+    }
+
+    // Sleepy emotions
+    if (textLower.includes('sleepy') || textLower.includes('drowsy') || textLower.includes('need sleep') ||
+        textLower.includes('yawning') || textLower.includes('nodding off') || textLower.includes('bed time') ||
+        textLower.includes('sleepy') || textLower.includes('dozing')) {
+      sleepy += Math.random() * 0.8 + 0.1;
+      explanation += "Language showing sleepiness and need for rest. ";
+    }
+
+    // Energetic emotions
+    if (textLower.includes('energetic') || textLower.includes('full of energy') || textLower.includes('pumped up') ||
+        textLower.includes('charged') || textLower.includes('vigorous') || textLower.includes('lively') ||
+        textLower.includes('dynamic') || textLower.includes('active')) {
+      energetic += Math.random() * 0.8 + 0.1;
+      explanation += "High energy and vitality detected. ";
+    }
+
+    // Sick/Ill emotions
+    if (textLower.includes('sick') || textLower.includes('ill') || textLower.includes('unwell') ||
+        textLower.includes('nauseous') || textLower.includes('fever') || textLower.includes('cold') ||
+        textLower.includes('flu') || textLower.includes("don't feel good")) {
+      sick += Math.random() * 0.8 + 0.1;
+      explanation += "Language indicating illness or physical discomfort. ";
+    }
+
+    // Pain emotions
+    if (textLower.includes('pain') || textLower.includes('hurts') || textLower.includes('ache') ||
+        textLower.includes('sore') || textLower.includes('painful') || textLower.includes('throbbing') ||
+        textLower.includes('stinging') || textLower.includes('burning')) {
+      pain += Math.random() * 0.8 + 0.1;
+      explanation += "Language expressing physical pain or discomfort. ";
+    }
+
+    // Comfortable emotions
+    if (textLower.includes('comfortable') || textLower.includes('cozy') || textLower.includes('relaxed physically') ||
+        textLower.includes('at ease') || textLower.includes('snug') || textLower.includes('warm and fuzzy')) {
+      comfortable += Math.random() * 0.7 + 0.2;
+      explanation += "Language indicating physical comfort and ease. ";
+    }
+
+    // Restless emotions
+    if (textLower.includes('restless') || textLower.includes('fidgety') || textLower.includes("can't sit still") ||
+        textLower.includes('antsy') || textLower.includes('jittery') || textLower.includes('agitated physically')) {
+      restless += Math.random() * 0.7 + 0.2;
+      explanation += "Language showing physical restlessness and agitation. ";
+    }
+
+    // Satisfied emotions (physical)
+    if (textLower.includes('satisfied') || textLower.includes('full') || textLower.includes('satiated') ||
+        textLower.includes('fulfilled physically') || textLower.includes('had enough') || textLower.includes('complete')) {
+      satisfied += Math.random() * 0.7 + 0.2;
+      explanation += "Language indicating physical satisfaction and fulfillment. ";
+    }
+
+    // Craving emotions
+    if (textLower.includes('craving') || textLower.includes('longing for') || textLower.includes('desire strongly') ||
+        textLower.includes('yearning') || textLower.includes('aching for') || textLower.includes('dying for')) {
+      craving += Math.random() * 0.8 + 0.1;
+      explanation += "Language expressing strong cravings and desires. ";
+    }
+
+    // SOCIAL & RELATIONSHIP EMOTIONS
+
+    // Loved emotions
+    if (textLower.includes('loved') || textLower.includes('cherished') || textLower.includes('adored') ||
+        textLower.includes('feel love') || textLower.includes('cared for') || textLower.includes('appreciated') ||
+        textLower.includes('valued') || textLower.includes('treasured')) {
+      loved += Math.random() * 0.8 + 0.1;
+      explanation += "Language expressing feeling loved and valued. ";
+    }
+
+    // Rejected emotions
+    if (textLower.includes('rejected') || textLower.includes('turned away') || textLower.includes('dismissed') ||
+        textLower.includes('cast out') || textLower.includes('spurned') || textLower.includes('refused') ||
+        textLower.includes('pushed away') || textLower.includes('unwanted')) {
+      rejected += Math.random() * 0.8 + 0.1;
+      explanation += "Language indicating feelings of rejection and dismissal. ";
+    }
+
+    // Betrayed emotions
+    if (textLower.includes('betrayed') || textLower.includes('backstabbed') || textLower.includes('let down') ||
+        textLower.includes('deceived') || textLower.includes('double-crossed') || textLower.includes('sold out') ||
+        textLower.includes('broken trust') || textLower.includes('stabbed in back')) {
+      betrayed += Math.random() * 0.8 + 0.1;
+      explanation += "Language expressing feelings of betrayal and broken trust. ";
+    }
+
+    // Trusting emotions
+    if (textLower.includes('trust') || textLower.includes('believe in') || textLower.includes('have faith') ||
+        textLower.includes('rely on') || textLower.includes('count on') || textLower.includes('depend on') ||
+        textLower.includes('confident in others') || textLower.includes('secure with')) {
+      trusting += Math.random() * 0.7 + 0.2;
+      explanation += "Language showing trust and faith in others. ";
+    }
+
+    // Suspicious emotions
+    if (textLower.includes('suspicious') || textLower.includes('doubtful') || textLower.includes("don't trust") ||
+        textLower.includes('skeptical') || textLower.includes('wary') || textLower.includes('mistrustful') ||
+        textLower.includes('paranoid') || textLower.includes('questioning motives')) {
+      suspicious += Math.random() * 0.7 + 0.2;
+      explanation += "Language expressing suspicion and mistrust. ";
+    }
+
+    // Included emotions
+    if (textLower.includes('included') || textLower.includes('part of') || textLower.includes('belong') ||
+        textLower.includes('welcomed') || textLower.includes('accepted') || textLower.includes('invited') ||
+        textLower.includes('in the group') || textLower.includes('one of us')) {
+      included += Math.random() * 0.8 + 0.1;
+      explanation += "Language indicating feelings of inclusion and belonging. ";
+    }
+
+    // Excluded emotions
+    if (textLower.includes('excluded') || textLower.includes('left out') || textLower.includes('outcast') ||
+        textLower.includes('not invited') || textLower.includes('ignored') || textLower.includes('shut out') ||
+        textLower.includes("don't belong") || textLower.includes('outsider')) {
+      excluded += Math.random() * 0.8 + 0.1;
+      explanation += "Language expressing feelings of exclusion and isolation. ";
+    }
+
+    // Supported emotions
+    if (textLower.includes('supported') || textLower.includes('backed up') || textLower.includes('encouraged') ||
+        textLower.includes('helped') || textLower.includes('assisted') || textLower.includes('uplifted') ||
+        textLower.includes('cheered on') || textLower.includes('stood by')) {
+      supported += Math.random() * 0.8 + 0.1;
+      explanation += "Language indicating feeling supported and encouraged. ";
+    }
+
+    // ACHIEVEMENT & MOTIVATION EMOTIONS
+
+    // Motivated emotions
+    if (textLower.includes('motivated') || textLower.includes('driven') || textLower.includes('inspired') ||
+        textLower.includes('ready to go') || textLower.includes('pumped') || textLower.includes('fired up') ||
+        textLower.includes('eager') || textLower.includes('ambitious')) {
+      motivated += Math.random() * 0.8 + 0.1;
+      explanation += "Language showing high motivation and drive. ";
+    }
+
+    // Lazy emotions
+    if (textLower.includes('lazy') || textLower.includes('unmotivated') || textLower.includes("don't want to") ||
+        textLower.includes('lethargic') || textLower.includes('sluggish') || textLower.includes('inactive') ||
+        textLower.includes('procrastinating') || textLower.includes('couch potato')) {
+      lazy += Math.random() * 0.8 + 0.1;
+      procrastinating += Math.random() * 0.6 + 0.2;
+      explanation += "Language indicating laziness and lack of motivation. ";
+    }
+
+    // Productive emotions
+    if (textLower.includes('productive') || textLower.includes('efficient') || textLower.includes('getting things done') ||
+        textLower.includes('accomplished') || textLower.includes('on task') || textLower.includes('focused') ||
+        textLower.includes('making progress') || textLower.includes('working hard')) {
+      productive += Math.random() * 0.8 + 0.1;
+      accomplished += Math.random() * 0.6 + 0.2;
+      explanation += "Language showing productivity and task completion. ";
+    }
+
+    // Procrastinating emotions
+    if (textLower.includes('procrastinating') || textLower.includes('putting off') || textLower.includes('delaying') ||
+        textLower.includes('avoiding work') || textLower.includes('distracted') || textLower.includes('wasting time') ||
+        textLower.includes('later') || textLower.includes('tomorrow')) {
+      procrastinating += Math.random() * 0.8 + 0.1;
+      distracted += Math.random() * 0.6 + 0.2;
+      explanation += "Language indicating procrastination and avoidance. ";
+    }
+
+    // Accomplished emotions
+    if (textLower.includes('accomplished') || textLower.includes('achieved') || textLower.includes('completed') ||
+        textLower.includes('finished') || textLower.includes('succeeded') || textLower.includes('done it') ||
+        textLower.includes('reached goal') || textLower.includes('made it')) {
+      accomplished += Math.random() * 0.8 + 0.1;
+      explanation += "Language expressing accomplishment and achievement. ";
+    }
+
+    // Defeated emotions
+    if (textLower.includes('defeated') || textLower.includes('beaten') || textLower.includes('failed') ||
+        textLower.includes('given up') || textLower.includes('crushed') || textLower.includes('lost') ||
+        textLower.includes('conquered') || textLower.includes("can't win")) {
+      defeated += Math.random() * 0.8 + 0.1;
+      explanation += "Language indicating defeat and failure. ";
+    }
+
+    // Distracted emotions
+    if (textLower.includes('distracted') || textLower.includes("can't focus") || textLower.includes('scattered') ||
+        textLower.includes('unfocused') || textLower.includes('all over the place') || textLower.includes('mind wandering') ||
+        textLower.includes('losing concentration') || textLower.includes('easily sidetracked')) {
+      distracted += Math.random() * 0.7 + 0.2;
+      explanation += "Language showing distraction and lack of focus. ";
     }
 
     // Neutral check - reduce if strong emotions detected
     const totalEmotionalIntensity = happy + angry + sad + excited + anxious + disgusted + surprised + calm + 
       confident + frustrated + hopeful + disappointed + grateful + envious + proud + ashamed + 
       curious + bored + content + enthusiastic + melancholic + optimistic + pessimistic + 
-      relieved + stressed + compassionate + hostile + lonely + passionate + determined + uncertain;
-    if (totalEmotionalIntensity > 3) {
-      neutral = Math.max(0.1, neutral - (totalEmotionalIntensity - 3) * 0.2);
+      relieved + stressed + compassionate + hostile + lonely + passionate + determined + uncertain +
+      hungry + thirsty + tired + sleepy + energetic + sick + pain + comfortable + restless + satisfied + craving +
+      loved + rejected + betrayed + trusting + suspicious + included + excluded + supported +
+      motivated + lazy + productive + procrastinating + accomplished + defeated + focused + distracted;
+    if (totalEmotionalIntensity > 4) {
+      neutral = Math.max(0.05, neutral - (totalEmotionalIntensity - 4) * 0.15);
     }
 
     // Add some randomness for realism
@@ -418,7 +737,7 @@ export const emotionDetector = async (textToAnalyze: string): Promise<EmotionAna
       disgusted: Math.min(disgusted + Math.random() * 0.2, 1.0),
       neutral: Math.min(neutral + Math.random() * 0.2, 1.0),
       
-      // Extended emotions
+      // Extended psychological emotions
       confident: Math.min(confident + Math.random() * 0.2, 1.0),
       frustrated: Math.min(frustrated + Math.random() * 0.2, 1.0),
       hopeful: Math.min(hopeful + Math.random() * 0.2, 1.0),
@@ -444,7 +763,40 @@ export const emotionDetector = async (textToAnalyze: string): Promise<EmotionAna
       peaceful: Math.min(peaceful + Math.random() * 0.2, 1.0),
       passionate: Math.min(passionate + Math.random() * 0.2, 1.0),
       determined: Math.min(determined + Math.random() * 0.2, 1.0),
-      uncertain: Math.min(uncertain + Math.random() * 0.2, 1.0)
+      uncertain: Math.min(uncertain + Math.random() * 0.2, 1.0),
+      
+      // Physical & Basic Human Emotions
+      hungry: Math.min(hungry + Math.random() * 0.2, 1.0),
+      thirsty: Math.min(thirsty + Math.random() * 0.2, 1.0),
+      tired: Math.min(tired + Math.random() * 0.2, 1.0),
+      sleepy: Math.min(sleepy + Math.random() * 0.2, 1.0),
+      energetic: Math.min(energetic + Math.random() * 0.2, 1.0),
+      sick: Math.min(sick + Math.random() * 0.2, 1.0),
+      pain: Math.min(pain + Math.random() * 0.2, 1.0),
+      comfortable: Math.min(comfortable + Math.random() * 0.2, 1.0),
+      restless: Math.min(restless + Math.random() * 0.2, 1.0),
+      satisfied: Math.min(satisfied + Math.random() * 0.2, 1.0),
+      craving: Math.min(craving + Math.random() * 0.2, 1.0),
+      
+      // Social & Relationship Emotions
+      loved: Math.min(loved + Math.random() * 0.2, 1.0),
+      rejected: Math.min(rejected + Math.random() * 0.2, 1.0),
+      betrayed: Math.min(betrayed + Math.random() * 0.2, 1.0),
+      trusting: Math.min(trusting + Math.random() * 0.2, 1.0),
+      suspicious: Math.min(suspicious + Math.random() * 0.2, 1.0),
+      included: Math.min(included + Math.random() * 0.2, 1.0),
+      excluded: Math.min(excluded + Math.random() * 0.2, 1.0),
+      supported: Math.min(supported + Math.random() * 0.2, 1.0),
+      
+      // Achievement & Motivation Emotions
+      motivated: Math.min(motivated + Math.random() * 0.2, 1.0),
+      lazy: Math.min(lazy + Math.random() * 0.2, 1.0),
+      productive: Math.min(productive + Math.random() * 0.2, 1.0),
+      procrastinating: Math.min(procrastinating + Math.random() * 0.2, 1.0),
+      accomplished: Math.min(accomplished + Math.random() * 0.2, 1.0),
+      defeated: Math.min(defeated + Math.random() * 0.2, 1.0),
+      focused: Math.min(focused + Math.random() * 0.2, 1.0),
+      distracted: Math.min(distracted + Math.random() * 0.2, 1.0)
     };
 
     const originalEmotions = {
@@ -498,6 +850,7 @@ export const emotionDetector = async (textToAnalyze: string): Promise<EmotionAna
         dominant_emotion: 'error'
       },
       expandedEmotions: {
+        // Core emotions
         calm: 0,
         happy: 0,
         sad: 0,
@@ -507,6 +860,8 @@ export const emotionDetector = async (textToAnalyze: string): Promise<EmotionAna
         surprised: 0,
         disgusted: 0,
         neutral: 0,
+        
+        // Extended psychological emotions
         confident: 0,
         frustrated: 0,
         hopeful: 0,
@@ -533,6 +888,39 @@ export const emotionDetector = async (textToAnalyze: string): Promise<EmotionAna
         passionate: 0,
         determined: 0,
         uncertain: 0,
+        
+        // Physical & Basic Human Emotions
+        hungry: 0,
+        thirsty: 0,
+        tired: 0,
+        sleepy: 0,
+        energetic: 0,
+        sick: 0,
+        pain: 0,
+        comfortable: 0,
+        restless: 0,
+        satisfied: 0,
+        craving: 0,
+        
+        // Social & Relationship Emotions
+        loved: 0,
+        rejected: 0,
+        betrayed: 0,
+        trusting: 0,
+        suspicious: 0,
+        included: 0,
+        excluded: 0,
+        supported: 0,
+        
+        // Achievement & Motivation Emotions
+        motivated: 0,
+        lazy: 0,
+        productive: 0,
+        procrastinating: 0,
+        accomplished: 0,
+        defeated: 0,
+        focused: 0,
+        distracted: 0,
         dominant_emotion: 'error',
         explanation: 'An error occurred during analysis'
       },
@@ -581,7 +969,7 @@ export const emotionPredictor = async (textToAnalyze: string): Promise<string> =
       disgusted: Number(result.expandedEmotions.disgusted.toFixed(3)),
       neutral: Number(result.expandedEmotions.neutral.toFixed(3)),
       
-      // Extended emotions
+      // Extended psychological emotions
       confident: Number(result.expandedEmotions.confident.toFixed(3)),
       frustrated: Number(result.expandedEmotions.frustrated.toFixed(3)),
       hopeful: Number(result.expandedEmotions.hopeful.toFixed(3)),
@@ -608,6 +996,39 @@ export const emotionPredictor = async (textToAnalyze: string): Promise<string> =
       passionate: Number(result.expandedEmotions.passionate.toFixed(3)),
       determined: Number(result.expandedEmotions.determined.toFixed(3)),
       uncertain: Number(result.expandedEmotions.uncertain.toFixed(3)),
+      
+      // Physical & Basic Human Emotions
+      hungry: Number(result.expandedEmotions.hungry.toFixed(3)),
+      thirsty: Number(result.expandedEmotions.thirsty.toFixed(3)),
+      tired: Number(result.expandedEmotions.tired.toFixed(3)),
+      sleepy: Number(result.expandedEmotions.sleepy.toFixed(3)),
+      energetic: Number(result.expandedEmotions.energetic.toFixed(3)),
+      sick: Number(result.expandedEmotions.sick.toFixed(3)),
+      pain: Number(result.expandedEmotions.pain.toFixed(3)),
+      comfortable: Number(result.expandedEmotions.comfortable.toFixed(3)),
+      restless: Number(result.expandedEmotions.restless.toFixed(3)),
+      satisfied: Number(result.expandedEmotions.satisfied.toFixed(3)),
+      craving: Number(result.expandedEmotions.craving.toFixed(3)),
+      
+      // Social & Relationship Emotions
+      loved: Number(result.expandedEmotions.loved.toFixed(3)),
+      rejected: Number(result.expandedEmotions.rejected.toFixed(3)),
+      betrayed: Number(result.expandedEmotions.betrayed.toFixed(3)),
+      trusting: Number(result.expandedEmotions.trusting.toFixed(3)),
+      suspicious: Number(result.expandedEmotions.suspicious.toFixed(3)),
+      included: Number(result.expandedEmotions.included.toFixed(3)),
+      excluded: Number(result.expandedEmotions.excluded.toFixed(3)),
+      supported: Number(result.expandedEmotions.supported.toFixed(3)),
+      
+      // Achievement & Motivation Emotions
+      motivated: Number(result.expandedEmotions.motivated.toFixed(3)),
+      lazy: Number(result.expandedEmotions.lazy.toFixed(3)),
+      productive: Number(result.expandedEmotions.productive.toFixed(3)),
+      procrastinating: Number(result.expandedEmotions.procrastinating.toFixed(3)),
+      accomplished: Number(result.expandedEmotions.accomplished.toFixed(3)),
+      defeated: Number(result.expandedEmotions.defeated.toFixed(3)),
+      focused: Number(result.expandedEmotions.focused.toFixed(3)),
+      distracted: Number(result.expandedEmotions.distracted.toFixed(3)),
       
       dominant_emotion: result.expandedEmotions.dominant_emotion,
       explanation: result.expandedEmotions.explanation

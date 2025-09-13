@@ -29,7 +29,7 @@ interface ExpandedEmotionScores {
   disgusted: number;
   neutral: number;
   
-  // Extended emotions
+  // Extended psychological emotions
   confident: number;
   frustrated: number;
   hopeful: number;
@@ -56,6 +56,39 @@ interface ExpandedEmotionScores {
   passionate: number;
   determined: number;
   uncertain: number;
+  
+  // Physical & Basic Human Emotions
+  hungry: number;
+  thirsty: number;
+  tired: number;
+  sleepy: number;
+  energetic: number;
+  sick: number;
+  pain: number;
+  comfortable: number;
+  restless: number;
+  satisfied: number;
+  craving: number;
+  
+  // Social & Relationship Emotions  
+  loved: number;
+  rejected: number;
+  betrayed: number;
+  trusting: number;
+  suspicious: number;
+  included: number;
+  excluded: number;
+  supported: number;
+  
+  // Achievement & Motivation Emotions
+  motivated: number;
+  lazy: number;
+  productive: number;
+  procrastinating: number;
+  accomplished: number;
+  defeated: number;
+  focused: number;
+  distracted: number;
   
   dominant_emotion: string;
   explanation: string;
@@ -128,7 +161,7 @@ const EmotionAnalyzer = ({ selectedText }: EmotionAnalyzerProps) => {
       disgusted: 'bg-green-100 text-green-800 border-green-200',
       neutral: 'bg-gray-100 text-gray-800 border-gray-200',
       
-      // Extended emotions
+      // Extended psychological emotions
       confident: 'bg-indigo-100 text-indigo-800 border-indigo-200',
       frustrated: 'bg-red-100 text-red-800 border-red-200',
       hopeful: 'bg-emerald-100 text-emerald-800 border-emerald-200',
@@ -155,6 +188,39 @@ const EmotionAnalyzer = ({ selectedText }: EmotionAnalyzerProps) => {
       passionate: 'bg-rose-100 text-rose-800 border-rose-200',
       determined: 'bg-indigo-100 text-indigo-800 border-indigo-200',
       uncertain: 'bg-gray-100 text-gray-800 border-gray-200',
+      
+      // Physical & Basic Human Emotions
+      hungry: 'bg-orange-100 text-orange-800 border-orange-200',
+      thirsty: 'bg-blue-100 text-blue-800 border-blue-200',
+      tired: 'bg-purple-100 text-purple-800 border-purple-200',
+      sleepy: 'bg-indigo-100 text-indigo-800 border-indigo-200',
+      energetic: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+      sick: 'bg-gray-100 text-gray-800 border-gray-200',
+      pain: 'bg-red-100 text-red-800 border-red-200',
+      comfortable: 'bg-green-100 text-green-800 border-green-200',
+      restless: 'bg-orange-100 text-orange-800 border-orange-200',
+      satisfied: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+      craving: 'bg-pink-100 text-pink-800 border-pink-200',
+      
+      // Social & Relationship Emotions
+      loved: 'bg-pink-100 text-pink-800 border-pink-200',
+      rejected: 'bg-red-100 text-red-800 border-red-200',
+      betrayed: 'bg-red-100 text-red-800 border-red-200',
+      trusting: 'bg-green-100 text-green-800 border-green-200',
+      suspicious: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+      included: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+      excluded: 'bg-gray-100 text-gray-800 border-gray-200',
+      supported: 'bg-teal-100 text-teal-800 border-teal-200',
+      
+      // Achievement & Motivation Emotions
+      motivated: 'bg-indigo-100 text-indigo-800 border-indigo-200',
+      lazy: 'bg-gray-100 text-gray-800 border-gray-200',
+      productive: 'bg-green-100 text-green-800 border-green-200',
+      procrastinating: 'bg-orange-100 text-orange-800 border-orange-200',
+      accomplished: 'bg-violet-100 text-violet-800 border-violet-200',
+      defeated: 'bg-slate-100 text-slate-800 border-slate-200',
+      focused: 'bg-blue-100 text-blue-800 border-blue-200',
+      distracted: 'bg-yellow-100 text-yellow-800 border-yellow-200',
     };
     return colors[emotion as keyof typeof colors] || 'bg-gray-100 text-gray-800 border-gray-200';
   };
@@ -251,18 +317,28 @@ const EmotionAnalyzer = ({ selectedText }: EmotionAnalyzerProps) => {
                         <div className="w-full bg-gray-200 rounded-full h-2">
                           <div 
                             className={`h-2 rounded-full transition-all duration-500 ${
-                              emotion === 'angry' || emotion === 'anger' || emotion === 'frustrated' || emotion === 'irritated' || emotion === 'hostile' ? 'bg-red-500' :
-                              emotion === 'disgusted' || emotion === 'disgust' ? 'bg-green-500' :
-                              emotion === 'anxious' || emotion === 'fear' || emotion === 'stressed' || emotion === 'overwhelmed' ? 'bg-purple-500' :
-                              emotion === 'happy' || emotion === 'joy' || emotion === 'excited' || emotion === 'enthusiastic' || emotion === 'optimistic' ? 'bg-yellow-500' :
-                              emotion === 'sad' || emotion === 'sadness' || emotion === 'melancholic' || emotion === 'lonely' || emotion === 'disappointed' ? 'bg-blue-500' :
+                              // Negative emotions
+                              emotion === 'angry' || emotion === 'anger' || emotion === 'frustrated' || emotion === 'irritated' || emotion === 'hostile' || emotion === 'rejected' || emotion === 'betrayed' ? 'bg-red-500' :
+                              emotion === 'disgusted' || emotion === 'disgust' || emotion === 'sick' ? 'bg-green-500' :
+                              emotion === 'anxious' || emotion === 'fear' || emotion === 'stressed' || emotion === 'overwhelmed' || emotion === 'restless' ? 'bg-purple-500' :
+                              emotion === 'sad' || emotion === 'sadness' || emotion === 'melancholic' || emotion === 'lonely' || emotion === 'disappointed' || emotion === 'defeated' ? 'bg-blue-500' :
+                              emotion === 'pain' || emotion === 'ashamed' || emotion === 'envious' ? 'bg-rose-500' :
+                              
+                              // Positive emotions  
+                              emotion === 'happy' || emotion === 'joy' || emotion === 'excited' || emotion === 'enthusiastic' || emotion === 'optimistic' || emotion === 'energetic' ? 'bg-yellow-500' :
                               emotion === 'surprised' || emotion === 'curious' ? 'bg-cyan-500' :
-                              emotion === 'calm' || emotion === 'peaceful' || emotion === 'content' ? 'bg-teal-500' :
-                              emotion === 'confident' || emotion === 'proud' || emotion === 'determined' ? 'bg-indigo-500' :
-                              emotion === 'hopeful' || emotion === 'grateful' || emotion === 'relieved' ? 'bg-emerald-500' :
-                              emotion === 'passionate' || emotion === 'compassionate' ? 'bg-pink-500' :
-                              emotion === 'ashamed' || emotion === 'envious' ? 'bg-rose-500' :
-                              emotion === 'bored' || emotion === 'neutral' || emotion === 'uncertain' || emotion === 'pessimistic' ? 'bg-gray-500' :
+                              emotion === 'calm' || emotion === 'peaceful' || emotion === 'content' || emotion === 'comfortable' ? 'bg-teal-500' :
+                              emotion === 'confident' || emotion === 'proud' || emotion === 'determined' || emotion === 'focused' || emotion === 'motivated' ? 'bg-indigo-500' :
+                              emotion === 'hopeful' || emotion === 'grateful' || emotion === 'relieved' || emotion === 'satisfied' || emotion === 'loved' || emotion === 'included' || emotion === 'supported' || emotion === 'trusting' ? 'bg-emerald-500' :
+                              emotion === 'passionate' || emotion === 'compassionate' || emotion === 'craving' ? 'bg-pink-500' :
+                              emotion === 'accomplished' || emotion === 'productive' ? 'bg-violet-500' :
+                              
+                              // Physical/Basic needs
+                              emotion === 'hungry' || emotion === 'thirsty' ? 'bg-orange-500' :
+                              emotion === 'tired' || emotion === 'sleepy' ? 'bg-purple-400' :
+                              
+                              // Neutral/unclear emotions
+                              emotion === 'bored' || emotion === 'neutral' || emotion === 'uncertain' || emotion === 'pessimistic' || emotion === 'lazy' || emotion === 'procrastinating' || emotion === 'distracted' || emotion === 'suspicious' || emotion === 'excluded' ? 'bg-gray-500' :
                               'bg-gray-500'
                             }`}
                             style={{ width: `${(score as number) * 100}%` }}
