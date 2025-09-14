@@ -102,7 +102,7 @@ const initializeClassifier = async () => {
       console.log('Initializing emotion classifier with WebGPU...');
       emotionClassifier = await pipeline(
         'text-classification',
-        'j-hartmann/emotion-english-distilroberta-base',
+        'SamLowe/roberta-base-go_emotions-onnx',
         { device: 'webgpu' }
       );
       console.log('Emotion classifier initialized successfully with WebGPU');
@@ -111,7 +111,7 @@ const initializeClassifier = async () => {
       try {
         emotionClassifier = await pipeline(
           'text-classification',
-          'j-hartmann/emotion-english-distilroberta-base'
+          'SamLowe/roberta-base-go_emotions-onnx'
         );
         console.log('Emotion classifier initialized successfully with CPU');
       } catch (cpuError) {
@@ -217,14 +217,15 @@ const mapTransformerEmotions = (predictions: any[], originalText: string): Emoti
     const label = prediction.label.toLowerCase();
     const score = prediction.score;
 
+    // Handle GoEmotions model labels (28 emotions)
     switch (label) {
       case 'anger':
-        baseEmotions.anger = score;
-        expandedEmotions.angry = score;
-        expandedEmotions.frustrated = score * 0.8;
-        expandedEmotions.irritated = score * 0.7;
-        expandedEmotions.hostile = score * 0.6;
-        explanation += `Strong anger detected (${(score * 100).toFixed(1)}%). `;
+      case 'annoyance':
+        baseEmotions.anger = Math.max(baseEmotions.anger, score);
+        expandedEmotions.angry = Math.max(expandedEmotions.angry, score);
+        expandedEmotions.frustrated = Math.max(expandedEmotions.frustrated, score * 0.8);
+        expandedEmotions.irritated = Math.max(expandedEmotions.irritated, score * 0.7);
+        explanation += `Anger detected (${(score * 100).toFixed(1)}%). `;
         break;
         
       case 'disgust':
@@ -234,30 +235,31 @@ const mapTransformerEmotions = (predictions: any[], originalText: string): Emoti
         break;
         
       case 'fear':
-        baseEmotions.fear = score;
-        expandedEmotions.anxious = score;
-        expandedEmotions.stressed = score * 0.8;
-        expandedEmotions.overwhelmed = score * 0.6;
-        expandedEmotions.uncertain = score * 0.7;
+      case 'nervousness':
+        baseEmotions.fear = Math.max(baseEmotions.fear, score);
+        expandedEmotions.anxious = Math.max(expandedEmotions.anxious, score);
+        expandedEmotions.stressed = Math.max(expandedEmotions.stressed, score * 0.8);
+        expandedEmotions.overwhelmed = Math.max(expandedEmotions.overwhelmed, score * 0.6);
         explanation += `Fear/anxiety detected (${(score * 100).toFixed(1)}%). `;
         break;
         
       case 'joy':
-        baseEmotions.joy = score;
-        expandedEmotions.happy = score;
-        expandedEmotions.excited = score * 0.8;
-        expandedEmotions.enthusiastic = score * 0.7;
-        expandedEmotions.optimistic = score * 0.6;
-        expandedEmotions.energetic = score * 0.5;
+      case 'excitement':
+      case 'amusement':
+        baseEmotions.joy = Math.max(baseEmotions.joy, score);
+        expandedEmotions.happy = Math.max(expandedEmotions.happy, score);
+        expandedEmotions.excited = Math.max(expandedEmotions.excited, score * 0.8);
+        expandedEmotions.enthusiastic = Math.max(expandedEmotions.enthusiastic, score * 0.7);
         explanation += `Joy and happiness detected (${(score * 100).toFixed(1)}%). `;
         break;
         
       case 'sadness':
-        baseEmotions.sadness = score;
-        expandedEmotions.sad = score;
-        expandedEmotions.melancholic = score * 0.8;
-        expandedEmotions.lonely = score * 0.6;
-        expandedEmotions.disappointed = score * 0.7;
+      case 'grief':
+      case 'disappointment':
+        baseEmotions.sadness = Math.max(baseEmotions.sadness, score);
+        expandedEmotions.sad = Math.max(expandedEmotions.sad, score);
+        expandedEmotions.melancholic = Math.max(expandedEmotions.melancholic, score * 0.8);
+        expandedEmotions.disappointed = Math.max(expandedEmotions.disappointed, score);
         explanation += `Sadness detected (${(score * 100).toFixed(1)}%). `;
         break;
         
@@ -266,6 +268,43 @@ const mapTransformerEmotions = (predictions: any[], originalText: string): Emoti
         expandedEmotions.surprised = score;
         expandedEmotions.curious = score * 0.6;
         explanation += `Surprise detected (${(score * 100).toFixed(1)}%). `;
+        break;
+        
+      case 'love':
+        expandedEmotions.loved = score;
+        explanation += `Love detected (${(score * 100).toFixed(1)}%). `;
+        break;
+        
+      case 'gratitude':
+        expandedEmotions.grateful = score;
+        explanation += `Gratitude detected (${(score * 100).toFixed(1)}%). `;
+        break;
+        
+      case 'pride':
+        expandedEmotions.proud = score;
+        explanation += `Pride detected (${(score * 100).toFixed(1)}%). `;
+        break;
+        
+      case 'confusion':
+        expandedEmotions.uncertain = score;
+        explanation += `Confusion detected (${(score * 100).toFixed(1)}%). `;
+        break;
+        
+      case 'curiosity':
+        expandedEmotions.curious = score;
+        explanation += `Curiosity detected (${(score * 100).toFixed(1)}%). `;
+        break;
+        
+      case 'optimism':
+        expandedEmotions.optimistic = score;
+        expandedEmotions.hopeful = Math.max(expandedEmotions.hopeful, score * 0.8);
+        explanation += `Optimism detected (${(score * 100).toFixed(1)}%). `;
+        break;
+        
+      case 'neutral':
+        expandedEmotions.neutral = score;
+        expandedEmotions.calm = Math.max(expandedEmotions.calm, score * 0.7);
+        explanation += `Neutral emotion detected (${(score * 100).toFixed(1)}%). `;
         break;
     }
   });
