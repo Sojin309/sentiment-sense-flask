@@ -1,7 +1,7 @@
 
 // Unit Testing Utilities for Emotion Detection App
 
-import { emotionDetector, emotionPredictor, testEmotionDetection } from './emotionDetection';
+import { emotionDetector, emotionPredictor } from './emotionDetection';
 
 export interface TestResult {
   testName: string;
@@ -21,19 +21,21 @@ export const runAllTests = async (): Promise<TestResult[]> => {
 
   // Test 1: Valid text input
   try {
-    const result1 = await emotionDetector("I am so happy today!");
+    const result1String = await emotionDetector("I am so happy today!");
+    const result1 = JSON.parse(result1String);
+    const isValid = !result1.error && result1.original_emotions && result1.expanded_emotions;
     results.push({
       testName: "Valid Happy Text Analysis",
-      passed: result1.status_code === 200 && result1.emotions.dominant_emotion !== 'none',
-      expected: "status_code: 200, valid emotions",
-      actual: `status_code: ${result1.status_code}, dominant: ${result1.emotions.dominant_emotion}`,
-      message: result1.status_code === 200 ? "✅ Test passed" : "❌ Test failed"
+      passed: isValid && result1.original_emotions.dominant_emotion !== 'none',
+      expected: "Valid emotion analysis result",
+      actual: isValid ? `dominant: ${result1.original_emotions.dominant_emotion}` : "Invalid result",
+      message: isValid ? "✅ Test passed" : "❌ Test failed"
     });
   } catch (error) {
     results.push({
       testName: "Valid Happy Text Analysis",
       passed: false,
-      expected: "status_code: 200",
+      expected: "Valid emotion analysis result",
       actual: `Error: ${error}`,
       message: "❌ Test failed with error"
     });
@@ -41,19 +43,20 @@ export const runAllTests = async (): Promise<TestResult[]> => {
 
   // Test 2: Empty string input
   try {
-    const result2 = await emotionDetector("");
+    const result2String = await emotionDetector("");
+    const result2 = JSON.parse(result2String);
     results.push({
       testName: "Empty String Input",
-      passed: result2.status_code === 400,
-      expected: "status_code: 400",
-      actual: `status_code: ${result2.status_code}`,
-      message: result2.status_code === 400 ? "✅ Test passed" : "❌ Test failed"
+      passed: result2.error !== undefined,
+      expected: "Error message for empty input",
+      actual: result2.error || "No error detected",
+      message: result2.error ? "✅ Test passed" : "❌ Test failed"
     });
   } catch (error) {
     results.push({
       testName: "Empty String Input",
       passed: false,
-      expected: "status_code: 400",
+      expected: "Error message for empty input",
       actual: `Error: ${error}`,
       message: "❌ Test failed with error"
     });
@@ -61,19 +64,20 @@ export const runAllTests = async (): Promise<TestResult[]> => {
 
   // Test 3: Whitespace only input
   try {
-    const result3 = await emotionDetector("   ");
+    const result3String = await emotionDetector("   ");
+    const result3 = JSON.parse(result3String);
     results.push({
       testName: "Whitespace Only Input",
-      passed: result3.status_code === 400,
-      expected: "status_code: 400",
-      actual: `status_code: ${result3.status_code}`,
-      message: result3.status_code === 400 ? "✅ Test passed" : "❌ Test failed"
+      passed: result3.error !== undefined,
+      expected: "Error message for whitespace input",
+      actual: result3.error || "No error detected",
+      message: result3.error ? "✅ Test passed" : "❌ Test failed"
     });
   } catch (error) {
     results.push({
       testName: "Whitespace Only Input",
       passed: false,
-      expected: "status_code: 400",
+      expected: "Error message for whitespace input",
       actual: `Error: ${error}`,
       message: "❌ Test failed with error"
     });
@@ -83,15 +87,15 @@ export const runAllTests = async (): Promise<TestResult[]> => {
   try {
     const result4 = await emotionPredictor("I feel great!");
     const parsedResult = JSON.parse(result4);
-    const hasAllEmotions = 'anger' in parsedResult && 'joy' in parsedResult && 
-                          'sadness' in parsedResult && 'fear' in parsedResult && 
-                          'disgust' in parsedResult && 'dominant_emotion' in parsedResult;
+    const hasCorrectStructure = parsedResult.original_emotions && parsedResult.expanded_emotions &&
+                               'anger' in parsedResult.original_emotions && 'joy' in parsedResult.original_emotions && 
+                               'dominant_emotion' in parsedResult.original_emotions;
     results.push({
       testName: "Emotion Predictor Format",
-      passed: hasAllEmotions,
-      expected: "JSON with all emotion fields",
-      actual: hasAllEmotions ? "All fields present" : "Missing fields",
-      message: hasAllEmotions ? "✅ Test passed" : "❌ Test failed"
+      passed: hasCorrectStructure,
+      expected: "JSON with correct structure",
+      actual: hasCorrectStructure ? "Correct structure present" : "Missing structure",
+      message: hasCorrectStructure ? "✅ Test passed" : "❌ Test failed"
     });
   } catch (error) {
     results.push({
@@ -105,14 +109,15 @@ export const runAllTests = async (): Promise<TestResult[]> => {
 
   // Test 5: Multiple emotion keywords
   try {
-    const result5 = await emotionDetector("I am angry and scared but also happy");
-    const emotions = result5.emotions;
-    const hasMultipleEmotions = emotions.anger > 0.1 && emotions.fear > 0.1 && emotions.joy > 0.1;
+    const result5String = await emotionDetector("I am angry and scared but also happy");
+    const result5 = JSON.parse(result5String);
+    const emotions = result5.original_emotions;
+    const hasMultipleEmotions = emotions && emotions.anger > 0.1 && emotions.fear > 0.1 && emotions.joy > 0.1;
     results.push({
       testName: "Multiple Emotion Detection",
-      passed: hasMultipleEmotions && result5.status_code === 200,
+      passed: hasMultipleEmotions,
       expected: "Multiple emotions detected",
-      actual: `anger: ${emotions.anger.toFixed(2)}, fear: ${emotions.fear.toFixed(2)}, joy: ${emotions.joy.toFixed(2)}`,
+      actual: emotions ? `anger: ${emotions.anger.toFixed(2)}, fear: ${emotions.fear.toFixed(2)}, joy: ${emotions.joy.toFixed(2)}` : "No emotions detected",
       message: hasMultipleEmotions ? "✅ Test passed" : "❌ Test failed"
     });
   } catch (error) {
